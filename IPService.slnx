@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="IPService.Application/IPService.Application.csproj" />
+  <Project Path="IPService.Domain/IPService.Domain.csproj" />
+  <Project Path="IPService.Infrastructure/IPService.Infrastructure.csproj" />
+  <Project Path="IPService/IPService.csproj" />
+</Solution>
