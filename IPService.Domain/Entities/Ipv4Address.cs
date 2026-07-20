@@ -5,10 +5,29 @@ namespace IPService.Domain.Entities
 {
     public class Ipv4Address : IIpAddress
     {
-        public long AddressId { get; private set; }
-        public string? TwoLetterCode { get; set; }
-        public DateTime LastUpdated { get; set; }
-        public IpVersion Version { get; set; }
+        public long AddressId { get; } //BIGINT representation
+        public string TwoLetterCode { get; private set; }
+        public DateTime LastUpdated { get; private set; }
+        public IpVersion Version => IpVersion.IPv4;
+
+        public Ipv4Address(long addressId, string twoLetterCode, DateTime lastUpdated)
+        {
+            AddressId = addressId;
+            TwoLetterCode = twoLetterCode;
+            LastUpdated = lastUpdated;
+        }
+
+        public Ipv4Address() { }
+
+        public void SetTwoLetterCode(string twoLetterCode)
+        {
+            TwoLetterCode = twoLetterCode;
+        }
+
+        public void SetLastUpdated(DateTime lastUpdated)
+        {
+            LastUpdated = lastUpdated;
+        }
 
         public string DisplayString()
         {
