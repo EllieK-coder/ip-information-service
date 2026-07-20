@@ -6,6 +6,7 @@ namespace IPService.Domain.Entities
     public class Ipv4Address : IIpAddress
     {
         public long AddressId { get; } //BIGINT representation
+        public string Address { get; } //192.168.1.1 (from DB)
         public string TwoLetterCode { get; private set; }
         public DateTime LastUpdated { get; private set; }
         public IpVersion Version => IpVersion.IPv4;
@@ -13,6 +14,10 @@ namespace IPService.Domain.Entities
         public Ipv4Address(long addressId, string twoLetterCode, DateTime lastUpdated)
         {
             AddressId = addressId;
+            Address = $"{(addressId >> 24) & 0xFF}." +
+                      $"{(addressId >> 16) & 0xFF}." +
+                      $"{(addressId >> 8) & 0xFF}." +
+                      $"{addressId & 0xFF}";
             TwoLetterCode = twoLetterCode;
             LastUpdated = lastUpdated;
         }
@@ -29,12 +34,5 @@ namespace IPService.Domain.Entities
             LastUpdated = lastUpdated;
         }
 
-        public string DisplayString()
-        {
-            return $"{(AddressId >> 24) & 0xFF}." +
-                   $"{(AddressId >> 16) & 0xFF}." +
-                   $"{(AddressId >> 8) & 0xFF}." +
-                   $"{AddressId & 0xFF}";
-        }
     }
 }

@@ -5,6 +5,5 @@ namespace IPService.Domain.Entities
     public interface IIpAddress
     {
         IpVersion Version { get; }
-        string DisplayString();
     }
 }
