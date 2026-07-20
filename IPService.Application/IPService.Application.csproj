@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IPService.Domain\IPService.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
