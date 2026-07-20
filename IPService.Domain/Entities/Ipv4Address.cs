@@ -14,6 +14,10 @@ namespace IPService.Domain.Entities
         public Ipv4Address(long addressId, string twoLetterCode, DateTime lastUpdated)
         {
             AddressId = addressId;
+            Address = $"{(addressId >> 24) & 0xFF}." +
+                      $"{(addressId >> 16) & 0xFF}." +
+                      $"{(addressId >> 8) & 0xFF}." +
+                      $"{addressId & 0xFF}";
             TwoLetterCode = twoLetterCode;
             LastUpdated = lastUpdated;
         }
@@ -30,12 +34,5 @@ namespace IPService.Domain.Entities
             LastUpdated = lastUpdated;
         }
 
-        public string DisplayString()
-        {
-            return $"{(AddressId >> 24) & 0xFF}." +
-                   $"{(AddressId >> 16) & 0xFF}." +
-                   $"{(AddressId >> 8) & 0xFF}." +
-                   $"{AddressId & 0xFF}";
-        }
     }
 }
