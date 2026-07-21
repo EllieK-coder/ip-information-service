@@ -34,27 +34,34 @@ namespace IPService.Infrastructure.Persistence.Commands
 
         public async Task SaveBatchAsync(IEnumerable<Ipv4Address> ipAddresses)
         {
-            // Single transaction for the whole batch (all-or-nothing)
+            var batch = ipAddresses.ToList();//took the ips into a list 
+
+            var ids = batch.Select(ip => ip.AddressId).ToList();//all AddressIds we want to save
+
+            //took all the ips that existing
+            var existingDict = await _context.IpAddresses
+                .Where(ip => ids.Contains(ip.AddressId))
+                .ToDictionaryAsync(ip => ip.AddressId);
+
+            //one transaction for the whole batch
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                foreach (var ipAddress in ipAddresses)
+                foreach (var ipAddress in batch)
                 {
-                    var existing = await _context.IpAddresses
-                        .FirstOrDefaultAsync(ip => ip.AddressId == ipAddress.AddressId);
-
-                    if (existing is null)
-                    {
-                        _context.IpAddresses.Add(ipAddress);
-                    }
-                    else
+                    if (existingDict.TryGetValue(ipAddress.AddressId, out var existing))//look in memory
                     {
                         existing.SetTwoLetterCode(ipAddress.TwoLetterCode);
                         existing.SetLastUpdated(ipAddress.LastUpdated);
                     }
+                    else
+                    {
+                        _context.IpAddresses.Add(ipAddress);//new record
+                    }
                 }
 
+                //single write for all changes 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
