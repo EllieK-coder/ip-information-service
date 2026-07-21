@@ -37,7 +37,7 @@ namespace IPService.Infrastructure.Persistence.Configurations
             // Με INCLUDE, query τρέχει μόνο στο index
             entity.HasIndex(i => i.TwoLetterCode)
                 .IncludeProperties(i => i.LastUpdated)
-                .HasDatabaseName("IX_IpAddress_CountryTwoLetterCode_LastUpdated");
+                .HasDatabaseName("IX_Ipv4Address_TwoLetterCode_LastUpdated");
         }
     }
 }
