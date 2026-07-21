@@ -2,14 +2,11 @@
 {
     public class Country
     {
-        public int Id { get; }
-        public string Name { get;  }
-        public string TwoLetterCode { get; }
-        public string ThreeLetterCode { get; }
+        public string Name { get; } = string.Empty;
+        public string TwoLetterCode { get; } = string.Empty;
+        public string ThreeLetterCode { get; } = string.Empty;
 
-        public Country(int id, string name, string twoLetterCode, string threeLetterCode)
-        {
-            Id = id;
+        public Country(string name, string twoLetterCode, string threeLetterCode){
             Name = name;
             TwoLetterCode = twoLetterCode;
             ThreeLetterCode = threeLetterCode;

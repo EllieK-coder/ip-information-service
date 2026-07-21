@@ -6,8 +6,8 @@ namespace IPService.Domain.Entities
     public class Ipv4Address : IIpAddress
     {
         public long AddressId { get; } //BIGINT representation
-        public string Address { get; } //192.168.1.1 (from DB)
-        public string TwoLetterCode { get; private set; }
+        public string Address { get; } = string.Empty; //192.168.1.1 (from DB)
+        public string TwoLetterCode { get; private set; } = string.Empty;
         public DateTime LastUpdated { get; private set; }
         public IpVersion Version => IpVersion.IPv4;
 
