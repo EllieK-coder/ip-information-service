@@ -1,4 +1,5 @@
 ﻿// GetIpInfoHandler.cs
+// Project: IPService.Application  →  Handlers/  (or Queries/IpInfo/)
 using IPService.Application.CQRS.Queries;
 using IPService.Application.DTOs;
 using IPService.Application.HttpClients;
@@ -35,7 +36,10 @@ namespace IPService.Application.Handlers
             // 1. Database first.
             var (ip, country) = await _getIp.GetByAddressIdAsync(request.IpAddress);
             if (country is not null)
+            {
+                // Populated value lives in Country.Name (not the dead CountryName field).
                 return new CountryDto(country.TwoLetterCode, country.ThreeLetterCode, country.Name);
+            }
 
             // 2. Miss → external gateway. null = ip2c status 2 (unknown IP).
             var fromGateway = await _ip2c.GetCountryForIpv4Async(request.IpAddress, cancellationToken);
