@@ -68,7 +68,7 @@ namespace IPService.Infrastructure.Migrations
                         .IsUnique();
 
                     b.HasIndex("TwoLetterCode")
-                        .HasDatabaseName("IX_IpAddress_CountryTwoLetterCode_LastUpdated");
+                        .HasDatabaseName("IX_Ipv4Address_TwoLetterCode_LastUpdated");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("TwoLetterCode"), new[] { "LastUpdated" });
 
