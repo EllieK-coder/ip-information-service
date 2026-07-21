@@ -10,6 +10,7 @@ namespace IPService.Application.Interfaces
     /// </summary>
     public interface IEnsureCountry
     {
+        //Ensure a country exists, and if not save it 
         Task EnsureExistsAsync(CountryDto country, CancellationToken cancellationToken = default);
     }
 }
