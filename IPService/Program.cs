@@ -1,4 +1,6 @@
 using IPService.Application.Behaviors;
+using IPService.Application.Caching;
+using IPService.Infrastructure.Caching;
 using IPService.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<IpDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ICache, MemoryCacheStore>();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
 var app = builder.Build();

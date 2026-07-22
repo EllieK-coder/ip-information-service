@@ -1,6 +1,5 @@
 ﻿using IPService.Application.Caching;
 using MediatR;
-using WorldRank.Application.Caching;
 
 namespace IPService.Application.Behaviors
 {
