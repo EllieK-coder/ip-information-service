@@ -3,5 +3,6 @@
   <Project Path="IPService.Domain/IPService.Domain.csproj" />
   <Project Path="IPService.Gateway/IPService.Gateway.csproj" Id="fd847361-ad3c-4b94-a307-18174adfd68c" />
   <Project Path="IPService.Infrastructure/IPService.Infrastructure.csproj" />
+  <Project Path="IPService.Tests/IPService.Tests.csproj" />
   <Project Path="IPService/IPService.csproj" />
 </Solution>
