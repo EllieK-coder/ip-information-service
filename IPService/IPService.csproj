@@ -18,6 +18,8 @@
 		<ProjectReference Include="..\IPService.Application\IPService.Application.csproj" />
 		<ProjectReference Include="..\IPService.Domain\IPService.Domain.csproj" />
 		<ProjectReference Include="..\IPService.Infrastructure\IPService.Infrastructure.csproj" />
+		<ProjectReference Include="..\IPService.Gateway\IPService.Gateway.csproj" />
+
 	</ItemGroup>
 
 </Project>

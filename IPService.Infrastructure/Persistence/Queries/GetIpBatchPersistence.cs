@@ -8,15 +8,14 @@ namespace IPService.Infrastructure.Persistence.Queries
     public class GetIpBatchPersistence : IGetIpBatchPersistence
     {
         private readonly IpDbContext _db;
-
         public GetIpBatchPersistence(IpDbContext db) => _db = db;
 
         public async Task<IReadOnlyList<Ipv4Address>> GetBatchAsync(
-            int skip, int take, CancellationToken cancellationToken = default)
+            long afterId, int take, CancellationToken cancellationToken = default)
         {
             return await _db.IpAddresses
-                .OrderBy(ip => ip.AddressId)   // stable order → pages never overlap or skip
-                .Skip(skip)
+                .Where(ip => ip.AddressId > afterId)
+                .OrderBy(ip => ip.AddressId)
                 .Take(take)
                 .ToListAsync(cancellationToken);
         }
