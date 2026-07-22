@@ -1,5 +1,6 @@
-﻿using System;
-using IPService.Domain.Enums;
+﻿using IPService.Domain.Enums;
+using IPService.Domain.Exceptions;
+using System;
 
 namespace IPService.Domain.Entities
 {
@@ -32,6 +33,28 @@ namespace IPService.Domain.Entities
         public void SetLastUpdated(DateTime lastUpdated)
         {
             LastUpdated = lastUpdated;
+        }
+
+        public static long ParseToLong(string ipString)
+        {
+            var parts = ipString.Split('.');//took the ip without . ex 19216811
+
+            if (parts.Length != 4 )//we need 4 parts for a valid ip
+            {
+                throw new InvalidIpv4InputException(ipString);
+            }
+
+            long result = 0;//start with a zero
+
+            foreach (var part in parts)
+            {
+                if (!byte.TryParse(part, out byte octet))//parse from string to byte
+                    throw new InvalidIpv4InputException(ipString);
+
+                result = result * 256 + octet;
+
+            }
+            return result;
         }
 
     }
