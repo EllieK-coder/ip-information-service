@@ -1,11 +1,15 @@
 using IPService.Application.HttpClients;
 using IPService.Application.Interfaces;
 using IPService.Application.Queries;
+using IPService.Application.Behaviors;
+using IPService.Application.Caching;
+using IPService.Infrastructure.Caching;
 using IPService.Infrastructure.Persistence;
 using IPService.Infrastructure.Persistence.Commands;
 using IPService.Infrastructure.Persistence.Queries;
 using Microsoft.EntityFrameworkCore;
 using IPService.Gateway;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +36,11 @@ builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 {
     client.BaseAddress = new Uri("https://ip2c.org");
 });
+
+//caching (Step 6)
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ICache, MemoryCacheStore>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
 var app = builder.Build();
 
