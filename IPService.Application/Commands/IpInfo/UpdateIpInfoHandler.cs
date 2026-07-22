@@ -1,4 +1,4 @@
-﻿// Application/Commands/IpInfo/UpdateIpInfoHandler.cs
+﻿/// Application/Commands/IpInfo/UpdateIpInfoHandler.cs
 using MediatR;
 using IPService.Application.Interfaces;
 using IPService.Application.HttpClients;
@@ -11,13 +11,13 @@ namespace IPService.Application.Commands.IpInfo
         private readonly IIp2cHttpClient _ip2c;
         private readonly IUpdateIpInfoPersistence _update;
         private readonly IEnsureCountry _ensureCountry;
-        private readonly ICacheInvalidator _cache;
+        private readonly ICache _cache;
 
         public UpdateIpInfoHandler(
             IIp2cHttpClient ip2c,
             IUpdateIpInfoPersistence update,
             IEnsureCountry ensureCountry,
-            ICacheInvalidator cache)
+            ICache cache)
         {
             _ip2c = ip2c;
             _update = update;
@@ -44,7 +44,7 @@ namespace IPService.Application.Commands.IpInfo
             await _update.UpdateAsync(entity, ct);
 
             // information changed → evict the stale read-cache entry
-            await _cache.RemoveAsync(IpCacheKeys.ForIp(entity.AddressId), ct);
+            _cache.Remove(IpCacheKeys.ForIp(entity.AddressId));
             return true;
         }
     }
