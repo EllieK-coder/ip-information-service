@@ -1,17 +1,32 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using IPService.Application;     
+using IPService.Infrastructure;  
+
 using IPService.Application.HttpClients;
 using IPService.Application.Interfaces;
 using IPService.Application.Queries;
 using IPService.Application.Behaviors;
+
+
 using IPService.Application.Caching;
 using IPService.Infrastructure.Caching;
 using IPService.Infrastructure.Persistence;
-using IPService.Infrastructure.Persistence.Commands;
-using IPService.Infrastructure.Persistence.Queries;
+
 using Microsoft.EntityFrameworkCore;
 using IPService.Gateway;
 using MediatR;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(cb =>
+{
+    cb.RegisterModule<ApplicationModule>();
+    cb.RegisterModule<InfrastructureModule>();
+});
 
 //basic stuff for controllers + swagger
 builder.Services.AddControllers();
@@ -22,15 +37,7 @@ builder.Services.AddDbContext<IpDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-//mediator finds all the handlers in the Application project by itself
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(GetCountryByIpQuery).Assembly));
 
-//tell the app which class to use for each interface
-//scoped = one instance per request (same with DbContext they use)
-builder.Services.AddScoped<IGetIpAddress, GetIpAddressPersistence>();
-builder.Services.AddScoped<ISaveIpAddress, SaveIpAddressPersistence>();
-builder.Services.AddScoped<IEnsureCountry, EnsureCountryPersistence>();
 
 builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 {
@@ -41,6 +48,7 @@ builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICache, MemoryCacheStore>();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+=======
 
 var app = builder.Build();
 
@@ -49,6 +57,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapGet("/", () => Results.Redirect("/swagger"))
+        .ExcludeFromDescription();
 }
 
 app.UseHttpsRedirection();
