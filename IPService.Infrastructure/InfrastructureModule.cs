@@ -20,5 +20,13 @@ public class InfrastructureModule : Module
         builder.RegisterType<EnsureCountryPersistence>()
             .As<IEnsureCountry>()
             .InstancePerLifetimeScope();
+
+        builder.RegisterType<GetIpBatchPersistence>()
+            .As<IGetIpBatchPersistence>()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterType<UpdateIpInfoPersistence>()
+            .As<IUpdateIpInfoPersistence>()
+            .InstancePerLifetimeScope();
     }
 }

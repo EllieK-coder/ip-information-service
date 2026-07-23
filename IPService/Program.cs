@@ -13,6 +13,10 @@ using IPService.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using IPService.Gateway;
 
+using Quartz;
+using IPService.Configuration;
+using IPService.Jobs;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,9 +44,30 @@ builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
     client.BaseAddress = new Uri("https://ip2c.org");
 });
 
-//caching (Step 6)
+//caching
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICache, MemoryCacheStore>();
+
+//ip refresh background job (Task 2) — Quartz, mirroring WorldRank DataFetchJob
+builder.Services.Configure<IpRefreshOptions>(
+    builder.Configuration.GetSection(IpRefreshOptions.SectionName));
+
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey(nameof(IpRefreshJob));
+
+    q.AddJob<IpRefreshJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(t => t
+        .ForJob(jobKey)
+        .WithIdentity($"{nameof(IpRefreshJob)}-trigger")
+        .StartNow()                              // fire immediately on startup
+        .WithSimpleSchedule(s => s
+            .WithIntervalInHours(1)
+            .RepeatForever()));
+});
+
+builder.Services.AddQuartzHostedService(opts => opts.WaitForJobsToComplete = true);
 
 var app = builder.Build();
 
