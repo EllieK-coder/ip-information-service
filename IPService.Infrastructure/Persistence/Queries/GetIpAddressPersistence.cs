@@ -15,7 +15,7 @@ namespace IPService.Infrastructure.Persistence.Queries
 
         public async Task<(Ipv4Address? IpAddress, Country? Country)> GetByAddressIdAsync(long addressId)
         {
-            // Read-only lookup, no tracking needed
+            //Read-only lookup, no tracking needed
             var ipAddress = await _context.IpAddresses
                 .AsNoTracking()
                 .FirstOrDefaultAsync(ip => ip.AddressId == addressId);
@@ -25,7 +25,7 @@ namespace IPService.Infrastructure.Persistence.Queries
                 return (null, null);
             }
 
-            // No navigation property on Ipv4Address -> separate lookup
+            //No navigation property on Ipv4Address -> separate lookup
             var country = await _context.Countries
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.TwoLetterCode == ipAddress.TwoLetterCode);
