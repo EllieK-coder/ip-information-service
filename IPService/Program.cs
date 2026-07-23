@@ -1,11 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using IPService.Application;     
-using IPService.Infrastructure;  
+using IPService.Application;
+using IPService.Infrastructure;
 
 using IPService.Application.HttpClients;
-using IPService.Application.Interfaces;
-using IPService.Application.Queries;
 
 
 using IPService.Application.Caching;
@@ -14,7 +12,6 @@ using IPService.Infrastructure.Persistence;
 
 using Microsoft.EntityFrameworkCore;
 using IPService.Gateway;
-using MediatR;
 
 
 
@@ -46,8 +43,6 @@ builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 //caching (Step 6)
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICache, MemoryCacheStore>();
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
-=======
 
 var app = builder.Build();
 
@@ -56,7 +51,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-   app.MapGet("/", () => Results.Redirect("/swagger"))
+    app.MapGet("/", () => Results.Redirect("/swagger"))
         .ExcludeFromDescription();
 }
 
