@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using IPService.Application.Interfaces;
+using IPService.Domain.Entities;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using IPService.Application.Interfaces;
 
 namespace IPService.Application.Commands.IpInfo
 {
@@ -10,20 +11,24 @@ namespace IPService.Application.Commands.IpInfo
         private readonly IGetIpBatchPersistence _batch;
         private readonly IMediator _mediator;
         private readonly ILogger<RefreshAllIpsHandler> _logger;
+        private readonly ISaveJobHistory _saveJobHistory;
 
         public RefreshAllIpsHandler(
             IGetIpBatchPersistence batch,
             IMediator mediator,
-            ILogger<RefreshAllIpsHandler> logger)
+            ILogger<RefreshAllIpsHandler> logger,
+            ISaveJobHistory saveJobHistory)
         {
             _batch = batch;
             _mediator = mediator;
             _logger = logger;
+            _saveJobHistory = saveJobHistory;
         }
 
         public async Task<RefreshAllIpsResult> Handle(
             RefreshAllIpsCommand request, CancellationToken ct)
         {
+            var startedAt = DateTime.UtcNow;
             var batchSize = request.BatchSize;
             long afterId = 0;                     // keyset cursor: start before the first key
             int processed = 0, changed = 0, failed = 0;
@@ -53,7 +58,15 @@ namespace IPService.Application.Commands.IpInfo
 
                 afterId = batch[^1].AddressId;    // advance cursor to last row's key
                 if (batch.Count < batchSize) break; // short page = last page
+
             }
+
+            var finishedAt = DateTime.UtcNow;
+
+            var status = failed > 0 ? "Failed" : "Success";
+            await _saveJobHistory.SaveAsync(
+                new JobHistory(startedAt, finishedAt, status, processed, changed, failed),
+                ct);
 
             _logger.LogInformation(
                 "IP refresh complete. Processed={Processed} Changed={Changed} Failed={Failed}",

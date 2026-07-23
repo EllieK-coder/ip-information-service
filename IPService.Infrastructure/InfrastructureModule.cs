@@ -29,6 +29,10 @@ public class InfrastructureModule : Module
             .As<IUpdateIpInfoPersistence>()
             .InstancePerLifetimeScope();
 
+        builder.RegisterType<SaveJobHistoryPersistence>()
+        .As<ISaveJobHistory>()
+        .InstancePerLifetimeScope();
+        
         builder.RegisterType<GetIpReportPersistence>()
             .As<IGetIpReportPersistence>()
             .InstancePerLifetimeScope();
