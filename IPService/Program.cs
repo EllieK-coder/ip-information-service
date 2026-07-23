@@ -1,7 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using IPService.Application;     
-using IPService.Infrastructure;  
+using IPService.Application;
+using IPService.Infrastructure;
 
 using IPService.Application.HttpClients;
 
