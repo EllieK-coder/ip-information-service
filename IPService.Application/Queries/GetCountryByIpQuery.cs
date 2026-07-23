@@ -6,6 +6,6 @@ namespace IPService.Application.Queries
 {
     public record GetCountryByIpQuery(long IpAddress) : IRequest<CountryDto?>, ICacheableQuery
     {
-        public string CacheKey => $"GetCountryByIp_{IpAddress}";
+        public string CacheKey => IpCacheKeys.ForIp(IpAddress);
     }
 }
