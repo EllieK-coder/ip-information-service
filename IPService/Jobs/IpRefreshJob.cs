@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Quartz;
-using IPService.Api.Configuration;
+using IPService.Configuration;
 using IPService.Application.Commands.IpInfo;
 
 namespace IPService.Jobs
