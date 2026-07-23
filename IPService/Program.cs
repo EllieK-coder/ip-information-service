@@ -6,7 +6,6 @@ using IPService.Infrastructure;
 using IPService.Application.HttpClients;
 using IPService.Application.Interfaces;
 using IPService.Application.Queries;
-using IPService.Application.Behaviors;
 
 
 using IPService.Application.Caching;
