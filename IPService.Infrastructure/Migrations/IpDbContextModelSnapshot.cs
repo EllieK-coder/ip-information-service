@@ -75,6 +75,39 @@ namespace IPService.Infrastructure.Migrations
                     b.ToTable("Ipv4Address", (string)null);
                 });
 
+            modelBuilder.Entity("IPService.Domain.Entities.JobHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("FailedRecords")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FinishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProcessedRecords")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("UpdatedRecords")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobHistory", (string)null);
+                });
+
             modelBuilder.Entity("IPService.Domain.Entities.Ipv4Address", b =>
                 {
                     b.HasOne("IPService.Domain.Entities.Country", null)

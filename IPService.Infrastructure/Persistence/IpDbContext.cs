@@ -8,7 +8,8 @@ namespace IPService.Infrastructure.Persistence
     {
         public DbSet<Ipv4Address> IpAddresses => Set<Ipv4Address>();
         public DbSet<Country> Countries => Set<Country>();
-        //public DbSet<JobHistory> JobHistories => Set<JobHistory>();
+        
+        public DbSet<JobHistory> JobHistories => Set<JobHistory>();
 
         public IpDbContext(DbContextOptions<IpDbContext> options)
             : base(options)
