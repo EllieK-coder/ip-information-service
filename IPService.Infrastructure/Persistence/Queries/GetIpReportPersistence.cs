@@ -43,6 +43,7 @@ namespace IPService.Infrastructure.Persistence.Queries
                     g => g.TwoLetterCode,
                     c => c.TwoLetterCode,
                     (g, c) => new CountryReportItem(
+                        g.TwoLetterCode,
                         c.Name,
                         g.AddressesCount,
                         g.LastAddressUpdated

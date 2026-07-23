@@ -32,5 +32,9 @@ public class InfrastructureModule : Module
         builder.RegisterType<SaveJobHistoryPersistence>()
         .As<ISaveJobHistory>()
         .InstancePerLifetimeScope();
+        
+        builder.RegisterType<GetIpReportPersistence>()
+            .As<IGetIpReportPersistence>()
+            .InstancePerLifetimeScope();
     }
 }
