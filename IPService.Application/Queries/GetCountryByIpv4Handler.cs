@@ -6,7 +6,7 @@ using MediatR;
 
 namespace IPService.Application.Queries
 {
-    public class GetCountryByIpv4Handler : IRequestHandler<GetCountryByIpv4Query, CountryDto?>
+    public class GetCountryByIpv4Handler : IRequestHandler<GetCountryByIpv4Query, CountryDto>
     {
         private readonly IGetIpAddress _getIp;
         private readonly ISaveIpAddress _saveIp;
