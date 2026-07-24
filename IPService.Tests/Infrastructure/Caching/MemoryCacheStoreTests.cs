@@ -1,7 +1,7 @@
 ﻿using IPService.Infrastructure.Caching;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace IPService.Tests
+namespace IPService.Tests.Infrastructure.Caching
 {
     public class MemoryCacheStoreTests
     {

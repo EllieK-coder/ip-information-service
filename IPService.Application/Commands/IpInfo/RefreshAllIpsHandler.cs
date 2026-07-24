@@ -1,4 +1,5 @@
-﻿using IPService.Application.Interfaces;
+﻿using IPService.Application.Infrastructure;
+using IPService.Application.Interfaces;
 using IPService.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;

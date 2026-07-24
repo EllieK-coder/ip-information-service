@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using IPService.Application.Queries.Report;
+﻿using IPService.Application.Queries.Report;
 
-namespace IPService.Application.Interfaces
+namespace IPService.Application.Infrastructure
 {
     public interface IGetIpReportPersistence
     {

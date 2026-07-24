@@ -1,4 +1,4 @@
-﻿using IPService.Application.Interfaces;
+﻿using IPService.Application.Infrastructure;
 using IPService.Domain.Entities;
 
 namespace IPService.Infrastructure.Persistence.Commands

@@ -1,21 +1,19 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using IPService.Application;
-using IPService.Infrastructure;
-
-using IPService.Application.HttpClients;
-
-
 using IPService.Application.Caching;
+using IPService.Application.HttpClients;
+using IPService.Configuration;
+using IPService.Gateway;
+using IPService.Infrastructure;
 using IPService.Infrastructure.Caching;
 using IPService.Infrastructure.Persistence;
-
-using Microsoft.EntityFrameworkCore;
-using IPService.Gateway;
-
-using Quartz;
-using IPService.Configuration;
 using IPService.Jobs;
+using IPService.Middleware;
+using Microsoft.EntityFrameworkCore;
+using Quartz;
+using NLog;
+using NLog.Extensions.Logging;
 
 
 
@@ -48,6 +46,14 @@ builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<ICache, MemoryCacheStore>();
 
+//Global Exception Handler
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+//logging
+builder.Logging.ClearProviders();         
+builder.Logging.AddNLog();
+
 //ip refresh background job (Task 2) — Quartz, mirroring WorldRank DataFetchJob
 builder.Services.Configure<IpRefreshOptions>(
     builder.Configuration.GetSection(IpRefreshOptions.SectionName));
@@ -79,6 +85,8 @@ if (app.Environment.IsDevelopment())
     app.MapGet("/", () => Results.Redirect("/swagger"))
         .ExcludeFromDescription();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

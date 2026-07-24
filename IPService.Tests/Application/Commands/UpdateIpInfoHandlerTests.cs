@@ -2,11 +2,12 @@
 using IPService.Application.Commands.IpInfo;
 using IPService.Application.DTOs;
 using IPService.Application.HttpClients;
+using IPService.Application.Infrastructure;
 using IPService.Application.Interfaces;
 using IPService.Domain.Entities;
 using Moq;
 
-namespace IPService.Tests
+namespace IPService.Tests.Application.Commands
 {
     public class UpdateIpInfoHandlerTests
     {

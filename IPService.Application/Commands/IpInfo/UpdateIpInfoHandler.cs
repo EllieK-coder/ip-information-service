@@ -3,6 +3,7 @@ using MediatR;
 using IPService.Application.Interfaces;
 using IPService.Application.HttpClients;
 using IPService.Application.Caching;
+using IPService.Application.Infrastructure;
 
 namespace IPService.Application.Commands.IpInfo
 {

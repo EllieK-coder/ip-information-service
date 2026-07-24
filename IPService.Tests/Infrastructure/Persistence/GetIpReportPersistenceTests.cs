@@ -3,7 +3,7 @@ using IPService.Infrastructure.Persistence;
 using IPService.Infrastructure.Persistence.Queries;
 using Microsoft.EntityFrameworkCore;
 
-namespace IPService.Tests
+namespace IPService.Tests.Infrastructure.Persistence
 {
     public class GetIpReportPersistenceTests
     {

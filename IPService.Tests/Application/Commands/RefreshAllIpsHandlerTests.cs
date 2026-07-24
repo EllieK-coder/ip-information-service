@@ -1,11 +1,12 @@
 ﻿using IPService.Application.Commands.IpInfo;
+using IPService.Application.Infrastructure;
 using IPService.Application.Interfaces;
 using IPService.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace IPService.Tests
+namespace IPService.Tests.Application.Commands
 {
     public class RefreshAllIpsHandlerTests
     {

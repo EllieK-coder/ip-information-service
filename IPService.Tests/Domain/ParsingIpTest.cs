@@ -1,7 +1,7 @@
 ﻿using IPService.Domain.Entities;
 using IPService.Domain.Exceptions;
 
-namespace IPService.Tests
+namespace IPService.Tests.Domain
 {
     public class ParsingIpTest
     {

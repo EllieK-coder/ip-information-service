@@ -22,25 +22,15 @@ namespace IPService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReport([FromQuery] string? codes)
         {
-            IReadOnlyCollection<string>? twoLetterCodes = string.IsNullOrWhiteSpace(codes)
+            var twoLetterCodes = string.IsNullOrWhiteSpace(codes)
                 ? null
                 : codes.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-            try
-            {
-                var report = await _mediator.Send(new GetIpReportQuery(twoLetterCodes));
-
-                var response = report.Select(r => new CountryReportResponse(
-                    r.CountryName,
-                    r.AddressesCount,
-                    r.LastAddressUpdated));
-
-                return Ok(response);
-            }
-            catch (InvalidCountryCodeException ex) // FR-4: malformed code -> 400
-            {
-                return BadRequest(ex.Message);
-            }
+            var report = await _mediator.Send(new GetIpReportQuery(twoLetterCodes));
+            var response = report.Select(r => new CountryReportResponse(
+                r.CountryName, r.AddressesCount, r.LastAddressUpdated));
+            return Ok(response);
         }
+        
     }
 }

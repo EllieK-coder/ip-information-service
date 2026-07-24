@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace IPService.Tests
+namespace IPService.Tests.Infrastructure.Persistence
 {
     public class PersistenceTests
     {

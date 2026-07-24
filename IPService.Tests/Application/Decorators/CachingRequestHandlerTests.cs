@@ -3,9 +3,10 @@ using IPService.Application.Decorators;
 using IPService.Application.DTOs;
 using IPService.Application.Queries;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace IPService.Tests
+namespace IPService.Tests.Application.Decorators
 {
     public class CachingRequestHandlerTests
     {
@@ -13,7 +14,7 @@ namespace IPService.Tests
         public async Task Handle_CacheHit_ReturnsCachedWithoutCallingInner()//cache hit -> return cached, dont call inner
         {
             //arrange
-            var query = new GetCountryByIpQuery(3232235777);
+            var query = new GetCountryByIpv4Query(3232235777);
             var cachedDto = new CountryDto("US", "USA", "United States");
 
             var fakeCache = new Mock<ICache>();
@@ -22,10 +23,12 @@ namespace IPService.Tests
                 .Returns((string k, out CountryDto? v) => { v = cachedDto; return true; });
 
             //the inner handler that should NOT be called
-            var fakeInner = new Mock<IRequestHandler<GetCountryByIpQuery, CountryDto?>>();
+            var fakeInner = new Mock<IRequestHandler<GetCountryByIpv4Query, CountryDto?>>();
 
-            var handler = new CachingRequestHandler<GetCountryByIpQuery, CountryDto?>(
-                fakeInner.Object, fakeCache.Object);
+            var fakeLogger = new Mock<ILogger<CachingRequestHandler<GetCountryByIpv4Query, CountryDto?>>>();
+
+            var handler = new CachingRequestHandler<GetCountryByIpv4Query, CountryDto?>(
+                fakeInner.Object, fakeCache.Object, fakeLogger.Object);
 
             //act
             var result = await handler.Handle(query, default);
@@ -36,7 +39,7 @@ namespace IPService.Tests
 
             //inner NOT called (cache hit)
             fakeInner.Verify(
-                x => x.Handle(It.IsAny<GetCountryByIpQuery>(), It.IsAny<CancellationToken>()),
+                x => x.Handle(It.IsAny<GetCountryByIpv4Query>(), It.IsAny<CancellationToken>()),
                 Times.Never);
         }
 
@@ -44,7 +47,7 @@ namespace IPService.Tests
         public async Task Handle_CacheMiss_CallsInnerAndStores()//cache miss -> call inner, then store
         {
             //arrange
-            var query = new GetCountryByIpQuery(3232235777);
+            var query = new GetCountryByIpv4Query(3232235777);
             var freshDto = new CountryDto("GR", "GRC", "Greece");
 
             //cache says "miss"
@@ -54,13 +57,15 @@ namespace IPService.Tests
                 .Returns((string k, out CountryDto? v) => { v = null; return false; });
 
             //inner returns fresh data
-            var fakeInner = new Mock<IRequestHandler<GetCountryByIpQuery, CountryDto?>>();
+            var fakeInner = new Mock<IRequestHandler<GetCountryByIpv4Query, CountryDto?>>();
             fakeInner
-                .Setup(x => x.Handle(It.IsAny<GetCountryByIpQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.Handle(It.IsAny<GetCountryByIpv4Query>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(freshDto);
 
-            var handler = new CachingRequestHandler<GetCountryByIpQuery, CountryDto?>(
-                fakeInner.Object, fakeCache.Object);
+            var fakeLogger = new Mock<ILogger<CachingRequestHandler<GetCountryByIpv4Query, CountryDto?>>>();
+
+            var handler = new CachingRequestHandler<GetCountryByIpv4Query, CountryDto?>(
+                fakeInner.Object, fakeCache.Object, fakeLogger.Object);
 
             //act
             var result = await handler.Handle(query, default);
@@ -71,7 +76,7 @@ namespace IPService.Tests
 
             //inner WAS called
             fakeInner.Verify(
-                x => x.Handle(It.IsAny<GetCountryByIpQuery>(), It.IsAny<CancellationToken>()),
+                x => x.Handle(It.IsAny<GetCountryByIpv4Query>(), It.IsAny<CancellationToken>()),
                 Times.Once);
 
             //and stored in cache

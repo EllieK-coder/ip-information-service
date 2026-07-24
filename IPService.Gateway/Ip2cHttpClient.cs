@@ -8,15 +8,23 @@ namespace IPService.Gateway
     {
         private readonly HttpClient _httpClient;
 
-        public Ip2cHttpClient(HttpClient httpClient)   // ← το factory το περνάει
+        public Ip2cHttpClient(HttpClient httpClient)   
         {
             _httpClient = httpClient;
         }
 
         public async Task<CountryDto?> GetCountryForIpv4Async(long addressId, CancellationToken cancellationToken = default)
         {
-            var response = await _httpClient.GetAsync($"?dec={addressId}", cancellationToken);
-            response.EnsureSuccessStatusCode();
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.GetAsync($"?dec={addressId}", cancellationToken);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Ip2cException($"IP2C request failed for dec={addressId}", ex);
+            }
 
             var body = await response.Content.ReadAsStringAsync(cancellationToken);
             var parts = body.Split(';');
@@ -35,10 +43,10 @@ namespace IPService.Gateway
                         );
             
 
-                case "2":  // unknown IP — expected outcome
+                case "2":  // unknown IP 
                     return null;   
 
-                case "0":  // invalid input — shouldn't happen if validated upstream
+                case "0":  // invalid input
                     throw new Ip2cException($"IP2C reported invalid input for dec={addressId}. This should have been caught by upstream validation.");
 
                 default:

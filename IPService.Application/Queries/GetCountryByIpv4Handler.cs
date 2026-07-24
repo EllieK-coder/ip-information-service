@@ -6,14 +6,14 @@ using MediatR;
 
 namespace IPService.Application.Queries
 {
-    public class GetCountryByIpHandler : IRequestHandler<GetCountryByIpQuery, CountryDto?>
+    public class GetCountryByIpv4Handler : IRequestHandler<GetCountryByIpv4Query, CountryDto>
     {
         private readonly IGetIpAddress _getIp;
         private readonly ISaveIpAddress _saveIp;
         private readonly IIp2cHttpClient _ip2c;
         private readonly IEnsureCountry _ensureCountry; 
 
-        public GetCountryByIpHandler(
+        public GetCountryByIpv4Handler(
             IGetIpAddress getIp,
             ISaveIpAddress saveIp,
             IIp2cHttpClient ip2c,
@@ -25,7 +25,7 @@ namespace IPService.Application.Queries
             _ensureCountry = ensureCountry;
         }
 
-        public async Task<CountryDto> Handle(GetCountryByIpQuery request, CancellationToken cancellationToken)
+        public async Task<CountryDto> Handle(GetCountryByIpv4Query request, CancellationToken cancellationToken)
         {
             // Our system knows this this ip's country
             var (ip, country) = await _getIp.GetByAddressIdAsync(request.IpAddress);
