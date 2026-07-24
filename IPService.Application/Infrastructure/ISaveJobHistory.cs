@@ -1,6 +1,6 @@
 ﻿using IPService.Domain.Entities;
 
-namespace IPService.Application.Interfaces
+namespace IPService.Application.Infrastructure
 {
     public interface ISaveJobHistory
     {

@@ -1,4 +1,4 @@
-﻿using IPService.Application.Interfaces;
+﻿using IPService.Application.Infrastructure;
 using IPService.Application.Validation;
 using MediatR;
 using Microsoft.Extensions.Logging;

@@ -5,9 +5,9 @@ using IPService.Application.Queries;
 using IPService.Domain.Entities;
 using Moq;
 
-namespace IPService.Tests
+namespace IPService.Tests.Application.Queries
 {
-    public class GetCountryByIpHandlerTests
+    public class GetCountryByIpv4HandlerTests
     {
         [Fact]
         public async Task Handle_IpInDb_ReturnsFromDbWithoutCallingGateway()//if IP is in db we dont call ip2c
@@ -24,14 +24,14 @@ namespace IPService.Tests
             var fakeIp2c = new Mock<IIp2cHttpClient>();
             var fakeEnsure = new Mock<IEnsureCountry>();
 
-            var handler = new GetCountryByIpHandler(
+            var handler = new GetCountryByIpv4Handler(
                 fakeGetIp.Object,//fake
                 fakeSaveIp.Object,
                 fakeIp2c.Object,
                 fakeEnsure.Object);
 
             // Act
-            var result = await handler.Handle(new GetCountryByIpQuery(3232235777), default);
+            var result = await handler.Handle(new GetCountryByIpv4Query(3232235777), default);
 
             // Assert
             Assert.NotNull(result);
@@ -59,11 +59,11 @@ namespace IPService.Tests
             var fakeSaveIp = new Mock<ISaveIpAddress>();
             var fakeEnsure = new Mock<IEnsureCountry>();
 
-            var handler = new GetCountryByIpHandler(
+            var handler = new GetCountryByIpv4Handler(
                 fakeGetIp.Object, fakeSaveIp.Object, fakeIp2c.Object, fakeEnsure.Object);
 
             // Act
-            var result = await handler.Handle(new GetCountryByIpQuery(3232235777), default);
+            var result = await handler.Handle(new GetCountryByIpv4Query(3232235777), default);
 
             // Assert
             Assert.NotNull(result);
@@ -98,11 +98,11 @@ namespace IPService.Tests
             var fakeSaveIp = new Mock<ISaveIpAddress>();
             var fakeEnsure = new Mock<IEnsureCountry>();
 
-            var handler = new GetCountryByIpHandler(
+            var handler = new GetCountryByIpv4Handler(
                 fakeGetIp.Object, fakeSaveIp.Object, fakeIp2c.Object, fakeEnsure.Object);
 
             // Act
-            var result = await handler.Handle(new GetCountryByIpQuery(3232235777), default);
+            var result = await handler.Handle(new GetCountryByIpv4Query(3232235777), default);
 
             // Assert
             Assert.NotNull(result);

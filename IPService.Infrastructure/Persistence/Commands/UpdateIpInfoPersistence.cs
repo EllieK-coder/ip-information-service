@@ -1,7 +1,7 @@
 ﻿// Persistence/Commands/UpdateIpInfoPersistence.cs
 using Microsoft.EntityFrameworkCore;
-using IPService.Application.Interfaces;
 using IPService.Domain.Entities;
+using IPService.Application.Infrastructure;
 
 namespace IPService.Infrastructure.Persistence.Commands
 {

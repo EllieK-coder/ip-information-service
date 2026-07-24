@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using IPService.Application.Infrastructure;
 using IPService.Application.Interfaces;
 using IPService.Infrastructure.Persistence.Commands;
 using IPService.Infrastructure.Persistence.Queries;

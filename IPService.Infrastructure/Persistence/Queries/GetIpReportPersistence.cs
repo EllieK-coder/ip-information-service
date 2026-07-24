@@ -1,4 +1,4 @@
-﻿using IPService.Application.Interfaces;
+﻿using IPService.Application.Infrastructure;
 using IPService.Application.Queries.Report;
 using IPService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

@@ -3,7 +3,7 @@ using IPService.Infrastructure.Persistence;
 using IPService.Infrastructure.Persistence.Commands;
 using Microsoft.EntityFrameworkCore;
 
-namespace IPService.Tests
+namespace IPService.Tests.Infrastructure.Persistence
 {
     public class SaveJobHistoryPersistenceTests
     {

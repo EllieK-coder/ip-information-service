@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Net;
-using System.Text;
-using IPService.Domain.Entities;
+﻿using IPService.Domain.Entities;
 
 namespace IPService.Application.Interfaces
 {

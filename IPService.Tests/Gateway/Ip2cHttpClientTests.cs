@@ -4,7 +4,7 @@ using Moq;
 using Moq.Protected;
 using System.Net;
 
-namespace IPService.Tests
+namespace IPService.Tests.Gateway
 {
     public class Ip2cHttpClientTests
     {
