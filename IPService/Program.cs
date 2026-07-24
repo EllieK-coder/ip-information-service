@@ -12,7 +12,8 @@ using IPService.Jobs;
 using IPService.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Quartz;
-using NLog;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using NLog.Extensions.Logging;
 
 
@@ -40,7 +41,46 @@ builder.Services.AddDbContext<IpDbContext>(options =>
 builder.Services.AddHttpClient<IIp2cHttpClient, Ip2cHttpClient>(client =>
 {
     client.BaseAddress = new Uri("https://ip2c.org");
+})
+.AddResilienceHandler("ip2c-pipeline", pipeline =>
+{
+    pipeline.AddRetry(new HttpRetryStrategyOptions
+    {
+        MaxRetryAttempts = 3,
+        BackoffType = DelayBackoffType.Exponential,
+        Delay = TimeSpan.FromSeconds(2),
+        UseJitter = true,
+        OnRetry = args =>
+        {
+            Console.WriteLine($"[Polly] Retry {args.AttemptNumber} after {args.RetryDelay.TotalSeconds}s");
+            return default;
+        }
+    });
+
+    pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+    {
+        FailureRatio = 0.5,
+        MinimumThroughput = 5,
+        SamplingDuration = TimeSpan.FromSeconds(30),
+        BreakDuration = TimeSpan.FromSeconds(30),
+        OnOpened = args =>
+        {
+            Console.WriteLine("[Polly] Circuit OPENED - failing fast for 30s");
+            return default;
+        },
+        OnClosed = args =>
+        {
+            Console.WriteLine("[Polly] Circuit CLOSED - back to normal");
+            return default;
+        }
+    });
+
+    pipeline.AddTimeout(TimeSpan.FromSeconds(30));
 });
+
+
+    
+    
 
 //caching
 builder.Services.AddMemoryCache();
