@@ -174,6 +174,20 @@ docs/                       SRS, ERD, architecture diagrams
 ```
 
 ---
+## Team & my contributions
+
+Built by a team of six in the Novibet Academy ExpressYourself programme (July 2026), using feature branches and pull requests.
+
+**My main contribution was the IP refresh job (Task 2)**, which keeps stored IP data up to date:
+
+- **Quartz job** (`IpRefreshJob`), running hourly with `[DisallowConcurrentExecution]`. It opens a fresh DI scope and sends a single `RefreshAllIpsCommand` through MediatR, with the interval and batch size bound from configuration (`IpRefreshOptions`).
+- **Batch orchestrator** (`RefreshAllIpsHandler`), which reads stored IPs in batches of 100 using **keyset pagination**, dispatches one update per IP, catches and logs failures per IP so one bad address doesn't stop the run, and reports Processed / Changed / Failed counts.
+- **Per-IP update handler** (`UpdateIpInfoHandler`), which fetches the latest data from IP2C, compares it with what is stored, and only when something changed updates the record, ensures the country row exists, stamps `LastUpdated` and **evicts the IP's cache entry** so the next read is fresh.
+- **Persistence interfaces and EF implementations** for batch reads and updates (`IGetIpBatchPersistence`, `IUpdateIpInfoPersistence`), following the clean-architecture rule that the Application layer defines interfaces and Infrastructure implements them.
+
+**Design decision:** I chose keyset pagination (`WHERE AddressId > lastId ORDER BY AddressId`) over `Skip`/`Take`, because offset paging makes the database count and discard all earlier rows on every batch. That gives quadratic cost over a full scan, while keyset gives a constant cost per batch.
+
+Earlier in the project I also set up the solution's layered structure, modelled the first version of the domain (`Country`, `Ipv4Address`, `IpVersion`) and wrote the first version of the IP lookup handler.
 
 ## Known limitations
 
